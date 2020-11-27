@@ -10,13 +10,15 @@ struct pessoa{
 };
 
 void cadastrar(FILE *file1, FILE *file2);
+void copia(FILE *file1, FILE *file2);
+void visualizar(FILE *file2);
 
 void main(){
     setlocale(LC_ALL, "portuguese");
     int opcao;
     FILE *file1, *file2;
     do{
-        printf("-----MENU-----");
+        printf("-----MENU-----\n 1 - registrar\n 2 - visualizar\n 3 - sair\n\nEscolha uma op√ß√£o: ");
         scanf("%d",&opcao);
         system("pause");
         system("cls");
@@ -30,9 +32,10 @@ void main(){
                 printf("Saindo...");
                 break;
             default:
-                printf("Escolha uma opÁ„o valÌda!");
+                printf("Escolha uma op√ß√£o val√≠da!");
                 break;
         }
+        system("cls");
     }while(opcao != 3);
 }
 
@@ -49,7 +52,32 @@ void cadastrar(FILE *file1,FILE *file2){
         scanf("%d",&dado.idade);
 
         fputc(dado.sexo,file1);
-        fprintf(file1,dado.nome);
-        fprintf(file1,"%d",dado.idade);
+        fprintf(file1," %s ",dado.nome);
+        fprintf(file1," %d",dado.idade);
     fclose(file1);
+
+    file1 = fopen("entrada.txt","r");
+    file2 = fopen("saida.txt", "a");
+        copia(file1,file2);
+    fclose(file1);
+    fclose(file2);
+}
+
+void copia(FILE *file1, FILE *file2){
+    char ler[1000];
+    while(fgets(ler, 1000,file1) != NULL){
+        fputs(ler,file2);
+    }
+}
+
+void visualizar(FILE *file2){
+    char *result, linha[1000];
+    file2 = fopen("saida.txt", "rt");
+        while(!feof(file2)){
+            result = fgets(linha, 1000, file2);
+            if(result){
+                printf("");
+            }
+        }
+    fclose(file2);
 }
