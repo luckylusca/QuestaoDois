@@ -9,9 +9,9 @@ struct pessoa{
     int idade;
 };
 
+void copia(FILE *file1,FILE *file2);
 void cadastrar(FILE *file1, FILE *file2);
-void copia(FILE *file1, FILE *file2);
-void visualizar(FILE *file2);
+void visualizar( FILE *file2);
 
 void main(){
     setlocale(LC_ALL, "portuguese");
@@ -27,6 +27,7 @@ void main(){
                 cadastrar(file1,file2);
                 break;
             case 2:
+
                 break;
             case 3:
                 printf("Saindo...");
@@ -41,11 +42,12 @@ void main(){
 
 void cadastrar(FILE *file1,FILE *file2){
     struct pessoa dado;
+    char ler[1000];
     file1 = fopen("entrada.txt","a+t");
         printf("Nome: ");
         scanf("%s",&dado.nome);
 
-        printf("Sexo: ");
+        printf("Sexo (m/f): ");
         scanf("%s",&dado.sexo);
 
         printf("Idade: ");
@@ -53,31 +55,35 @@ void cadastrar(FILE *file1,FILE *file2){
 
         fputc(dado.sexo,file1);
         fprintf(file1," %s ",dado.nome);
-        fprintf(file1," %d",dado.idade);
+        fprintf(file1," %d\n",dado.idade);
     fclose(file1);
 
-    file1 = fopen("entrada.txt","r");
-    file2 = fopen("saida.txt", "a");
+    file1 = fopen("entrada.txt","rt");
+    file2 = fopen("saida.txt", "wt");
         copia(file1,file2);
     fclose(file1);
     fclose(file2);
 }
 
-void copia(FILE *file1, FILE *file2){
-    char ler[1000];
-    while(fgets(ler, 1000,file1) != NULL){
-        fputs(ler,file2);
-    }
+void copia(FILE *file1,FILE *file2){
+    int f = 0, m = 0, id = 0;
+    char ler[1000], *result;
+    while(!feof(file1)){
+            result = fgets(ler, 1000, file1);
+            if(result == "m"){
+                m++;
+            }else if(result == "f"){
+                f++;
+            }
+        }
+    fprintf(file2,"O numero de homens: %d \n",m);
+    fprintf(file2,"O numero de mulheres: %d",f);
 }
 
 void visualizar(FILE *file2){
-    char *result, linha[1000];
     file2 = fopen("saida.txt", "rt");
         while(!feof(file2)){
-            result = fgets(linha, 1000, file2);
-            if(result){
-                printf("");
-            }
+
         }
     fclose(file2);
 }
