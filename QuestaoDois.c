@@ -50,7 +50,6 @@ void main(){
 
 void cadastrar(FILE *file1,FILE *file2){
     struct pessoa dado;
-    char ler[1000];
     //aberttura do arquivo file1
     file1 = fopen("entrada.txt","a+t");
         //recebendo dados
@@ -79,19 +78,24 @@ void cadastrar(FILE *file1,FILE *file2){
 
 void copia(FILE *file1,FILE *file2){
     int f = 0, m = 0;
-    char result;
-    //ciclo para ler todo o arquivo file1
-    while(!feof(file1)){
-        result = fgetc(file1);
-        //comparando caracter
-        if(result == 'M' || result == 'm'){
-            m++;
-        }else if(result == 'F' || result == 'f'){
-            f++;
+    char ler[100], masc[] = "Mm", fem[] = "Ff", result[100];
+
+    //comparando caracter
+    ler[100] = fgets(result,100,file1);
+    for(int i = 0; i < strlen(ler); i+50){
+        for(int j=0; j < strlen(masc);j++){
+            if(ler[i] == masc[j]){
+                m++;
+            }
+        }
+        for(int x; x < strlen(fem); x++){
+            if(ler[i] == fem[x]){
+                f++;
+            }
         }
     }
     //salvando no arquivo file2 formatada
-    fprintf(file2," O numero de homens: %d\n",m);
+    fprintf(file2,"O numero de homens: %d\n",m);
     fprintf(file2,"O numero de mulheres: %d",f);
 }
 
