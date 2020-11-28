@@ -1,58 +1,68 @@
+/*
+    Codigo desenvolvido para a cadeira de Algoritmo e Estrutura de Dados
+    Professor responsavel é o prof. Gentil
+    Alunos que trabalharam no programa: Lucas Felipe, Wesley Versart, Franscico Remo
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
 
-//estrutura de dados
 struct pessoa{
     char nome[50];
     char sexo;
     int idade;
 };
 
-//criação de funções
-void copia(FILE *file1,FILE *file2);
-void cadastrar(FILE *file1, FILE *file2);
-void visualizar( FILE *file2);
+FILE *entrada, *saida, *genero, *idade;
 
-//declaração de arquivos
-FILE *file1, *file2;
+void registrar(FILE *entrada,FILE *genero,FILE *idade);
+void menu(int opcao);
+void copia(FILE *genero,FILE *idade,FILE *saida);
+void olhar(FILE *entrada, FILE *saida);
 
-void main(){
-    setlocale(LC_ALL, "portuguese");
+int main(){
+    setlocale(LC_ALL,"portuguese");
     int opcao;
     do{
-            //sistema menu
         printf("-----MENU-----\n 1 - registrar\n 2 - visualizar\n 3 - sair\n\nEscolha uma opção: ");
         scanf("%d",&opcao);
         system("pause");
         system("cls");
-        switch(opcao){
-            case 1:
-                //chamada da função CADASTRAR
-                cadastrar(file1,file2);
-                break;
-            case 2:
-                //chamada de gunção VISUALIZAR
-                visualizar(file2);
-                break;
-            case 3:
-                printf("Saindo...");
-                break;
-            default:
-                printf("Escolha uma opção valída!");
-                break;
-        }
-        system("pause");
-        system("cls");
-    }while(opcao != 3);
+
+        menu(opcao);
+    }while(opcao !=3);
+    return 1;
 }
 
-void cadastrar(FILE *file1,FILE *file2){
+void menu(int opcao){
+    switch(opcao){
+        case 1:
+            //chamada da função CADASTRAR
+            registrar(entrada, genero, idade);
+            break;
+        case 2:
+            //chamada de função VISUALIZAR
+            copia(genero,idade,saida);
+            olhar(entrada,saida);
+            break;
+        case 3:
+            printf("Saindo...\n\n");
+            break;
+        default:
+            printf("Escolha uma opção valída!");
+            break;
+    }
+    system("pause");
+    system("cls");
+}
+
+void registrar(FILE *entrada,FILE *genero,FILE *idade){
     struct pessoa dado;
-    //aberttura do arquivo file1
-    file1 = fopen("entrada.txt","a+t");
-        //recebendo dados
+
+    entrada = fopen("entrada.txt","a+t");
+    genero = fopen("genero.txt","a+t");
+    idade = fopen("idade.txt","a+t");
         printf("Nome: ");
         scanf("%s",&dado.nome);
 
@@ -62,52 +72,72 @@ void cadastrar(FILE *file1,FILE *file2){
         printf("Idade: ");
         scanf("%d",&dado.idade);
 
-        //escrevendo dados no arquivo
-        fputc(dado.sexo,file1);
-        fprintf(file1," %s ",dado.nome);
-        fprintf(file1," %d\n",dado.idade);
-    fclose(file1);
+        fputc(dado.sexo,entrada);
+        fprintf(entrada," %s ",dado.nome);
+        fprintf(entrada," %d\n",dado.idade);
 
-    file1 = fopen("entrada.txt","rt");
-    file2 = fopen("saida.txt", "wt");
-        //colocar dados pro segundo arquivo
-        copia(file1,file2);
-    fclose(file1);
-    fclose(file2);
+        fputc(dado.sexo,genero);
+        fprintf(idade,"%d \n", dado.idade);
+    fclose(entrada);
+    fclose(idade);
+    fclose(genero);
 }
 
-void copia(FILE *file1,FILE *file2){
-    int f = 0, m = 0;
-    char ler[100], masc[] = "Mm", fem[] = "Ff", result[100];
+void copia(FILE *genero,FILE *idade,FILE *saida){
+    int m = 0, f = 0, maior = 0, id;
+    char ler1, ler2[100];
 
-    //comparando caracter
-    ler[100] = fgets(result,100,file1);
-    for(int i = 0; i < strlen(ler); i+50){
-        for(int j=0; j < strlen(masc);j++){
-            if(ler[i] == masc[j]){
+    saida = fopen("saida.txt","w+t");
+    genero = fopen("genero.txt","r+t");
+    idade = fopen("idade.txt","r+t");
+
+        while(!feof(genero)){
+            ler1 = fgetc(genero);
+            if(ler1 == 'M' || ler1 == 'm'){
                 m++;
-            }
-        }
-        for(int x; x < strlen(fem); x++){
-            if(ler[i] == fem[x]){
+            }else if(ler1 == 'F' || ler1 ==  'f'){
                 f++;
             }
         }
-    }
-    //salvando no arquivo file2 formatada
-    fprintf(file2,"O numero de homens: %d\n",m);
-    fprintf(file2,"O numero de mulheres: %d",f);
+        while(!feof(idade)){
+            ler2[100] = fgetc(idade);
+            id = atoi(ler2);
+            if(id > maior){
+                maior <- id;
+            }
+        }
+
+        fprintf(saida,"O numero de homens: %d\n",m);
+        fprintf(saida,"O numero de mulheres: %d\n",f);
+        fprintf(saida,"A idade da pessoa mais velha: %d\n\n",maior);
+
+    fclose(saida);
+    fclose(idade);
+    fclose(genero);
 }
 
-void visualizar(FILE *file2){
-    char ler[1000], *result;
-    file2 = fopen("saida.txt", "rt");
-    //ciclo para ler o segundo arquivo
-        while(!feof(file2)){
-                // mostrando tudo dentro do arquivo
-            result = fgets(ler,1000,file2);
-            printf("%s", result);
+void olhar(FILE *entrada, FILE *saida){
+    char ler[1000], *aparecer;
+    entrada = fopen("entrada.txt","r+t");
+        while(!feof(entrada)){
+            aparecer = fgets(ler,1000,entrada);
+            if(aparecer == NULL){
+                break;
+            }else{
+                printf("%s",aparecer);
+            }
         }
-    printf("\n\n");
-    fclose(file2);
+        printf("\n\n");
+    fclose(entrada);
+
+    saida = fopen("saida.txt","r+t");
+        while(!feof(saida)){
+            aparecer = fgets(ler,1000,saida);
+            if(aparecer == NULL){
+                break;
+            }else{
+                printf("%s",aparecer);
+            }
+        }
+    fclose(saida);
 }
