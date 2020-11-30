@@ -1,0 +1,146 @@
+//  PROGRAMA PRINCIPAL
+
+package ContaBancaria;
+import java.util.Scanner;
+
+public class Executar {
+    private static double valor;
+    
+    public static void main(String[] args){
+        conta minhaconta = new conta();
+        Scanner input = new Scanner(System.in);
+        
+        String nome;
+        int opcao, numero;
+        float saldo, limite;
+        
+        do{
+            System.out.println("----- * Menu * -----");
+            System.out.println("\n -> Conta Bancaria <- \n");
+            System.out.println("1 - Inserir dados:");
+            System.out.println("2 - Depositar valor");
+            System.out.println("3 - Sacar valor");
+            System.out.println("4 - Sair \n---------------------------");
+            System.out.print("Digite uma opção: ");
+            opcao = input.nextInt();
+            
+            System.out.println("");
+            switch(opcao){
+                case 1:
+                    System.out.print("\nEntre com o nome:"); 
+                    nome = input.next();
+                    
+                    System.out.print("Entre com o Numero: "); 
+                    numero = input.nextInt();
+
+                    System.out.print("Entre com o saldo: "); 
+                    saldo = input.nextFloat();
+                    
+                    System.out.print("Entre com o limite: ");
+                    limite = input.nextFloat();
+                    
+                    minhaconta.dados(nome, numero, saldo, limite);
+                    break;
+                    
+                case 2:
+                    System.out.print("\nInsira o valor do deposito: ");
+                    valor = input.nextDouble();
+                    minhaconta.deposita(valor);
+                    break;
+                    
+                case 3:
+                    System.out.print("\nInsira o valor que deseja sacar: ");
+                    valor = input.nextDouble();
+                    minhaconta.saca(valor);
+                    break;
+                    
+                case 4:
+                    System.out.println("\n\nSaindo...");
+                    break;
+                    
+                default:
+                    break;
+            }
+        }while(opcao != 4);
+    }
+}
+
+
+// NEW CLASSE CONTA 
+
+package ContaBancaria;
+
+public class conta{
+    private int numero;
+    private double saldo;
+    private double limite;
+    private String nome;
+    
+    //geradas automaticamente
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
+
+    public double getLimite() {
+        return limite;
+    }
+
+    public void setLimite(double limite) {
+        this.limite = limite;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+            
+    //feitas para execução do programa
+    void dados(String a, int b, float c, float d){
+        this.nome = a;
+        this.numero = b;
+        this.saldo = c;
+        this.limite = d;
+    }
+    
+    public boolean saca(double valor){
+        if(this.saldo < valor){
+            System.out.println("\nValor maior do que o presente em conta!");
+            return false;
+        }else{
+            this.saldo = this.saldo - valor;
+            System.out.println("\nSaque realizado com sucesso!");
+            return  true;
+        }
+    }  
+    
+    public void deposita(double valor){
+        this.saldo = this.saldo + valor;
+        System.out.println("\nDeposito realizado com sucesso!");
+    }
+    
+    public boolean transfere(conta destino, double valor){
+        if(this.saldo < valor){
+            System.out.println("\nValor maior do que o presente em conta!");
+            return false;
+        }else{
+            this.saldo = this.saldo - valor;
+            System.out.println("\nSaque realizado com sucesso!");
+            return  true;
+        }
+    }
+}
