@@ -1,74 +1,85 @@
-//  PROGRAMA PRINCIPAL
-
-package ContaBancaria;
-import java.util.Scanner;
+// PROGRAMA PRINCIPAL 
 
 public class Executar {
     private static double valor;
     
     public static void main(String[] args){
-        conta minhaconta = new conta();
+        conta outra_conta = new conta();
+        conta minha_conta = new conta();
+        
         Scanner input = new Scanner(System.in);
         
         String nome;
         int opcao, numero;
-        float saldo, limite;
+        float saldo, limite, saldo2 = 0, limite2 = 0;
         
         do{
             System.out.println("----- * Menu * -----");
             System.out.println("\n -> Conta Bancaria <- \n");
             System.out.println("1 - Inserir dados:");
-            System.out.println("2 - Depositar valor");
-            System.out.println("3 - Sacar valor");
-            System.out.println("4 - Sair \n---------------------------");
+            System.out.println("2 - Depositar");
+            System.out.println("3 - Sacar");
+            System.out.println("4 - Transferir");
+            System.out.println("5 - Sair \n---------------------------");
             System.out.print("Digite uma opção: ");
             opcao = input.nextInt();
             
-            System.out.println("");
+            
             switch(opcao){
                 case 1:
-                    System.out.print("\nEntre com o nome:"); 
+                    System.out.print("\nInsira o nome:"); 
                     nome = input.next();
                     
-                    System.out.print("Entre com o Numero: "); 
+                    System.out.print("Insira o numero: "); 
                     numero = input.nextInt();
 
-                    System.out.print("Entre com o saldo: "); 
+                    System.out.print("Insira o saldo: "); 
                     saldo = input.nextFloat();
                     
-                    System.out.print("Entre com o limite: ");
+                    System.out.print("Insira o limite: ");
                     limite = input.nextFloat();
                     
-                    minhaconta.dados(nome, numero, saldo, limite);
+                    minha_conta.dados(nome, numero, saldo, limite);
                     break;
                     
                 case 2:
                     System.out.print("\nInsira o valor do deposito: ");
                     valor = input.nextDouble();
-                    minhaconta.deposita(valor);
+                    minha_conta.deposita(valor);
                     break;
                     
                 case 3:
                     System.out.print("\nInsira o valor que deseja sacar: ");
                     valor = input.nextDouble();
-                    minhaconta.saca(valor);
+                    minha_conta.saca(valor);
                     break;
                     
                 case 4:
+                    System.out.print("\nInsira o valor que deseja transferir: ");
+                    valor = input.nextDouble();
+                    
+                    System.out.print("\nInsira o nome:"); 
+                    nome = input.next();
+                    
+                    System.out.print("Insira o numero: "); 
+                    numero = input.nextInt();
+                    
+                    outra_conta.dados(nome, numero, saldo2, limite2);
+                    minha_conta.transfere(outra_conta, valor);
+                    break;
+                    
+                case 5:
                     System.out.println("\n\nSaindo...");
                     break;
                     
                 default:
                     break;
             }
-        }while(opcao != 4);
+        }while(opcao != 5);
     }
 }
 
-
-// NEW CLASSE CONTA 
-
-package ContaBancaria;
+// CLASSE DE REGISTRO 
 
 public class conta{
     private int numero;
@@ -76,6 +87,12 @@ public class conta{
     private double limite;
     private String nome;
     
+    public conta() {
+        this.numero=0;
+        this.nome=" ";
+        this.saldo=0;
+        this.limite=0; 
+    }
     //geradas automaticamente
     public int getNumero() {
         return numero;
@@ -133,14 +150,12 @@ public class conta{
         System.out.println("\nDeposito realizado com sucesso!");
     }
     
-    public boolean transfere(conta destino, double valor){
+    public void transfere(conta destino, double valor){
         if(this.saldo < valor){
             System.out.println("\nValor maior do que o presente em conta!");
-            return false;
         }else{
             this.saldo = this.saldo - valor;
-            System.out.println("\nSaque realizado com sucesso!");
-            return  true;
+            System.out.println("\nTransferencia realizada com sucesso!");
         }
     }
 }
