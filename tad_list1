@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+FILE *file;
+
+struct onibus{
+    int cod_term;
+    char data[9];
+    char hora[5];
+    char placa[8];
+    int cod_empr;
+    struct onibus *prox;
+};
+typedef struct onibus elemento;
+
+const elemento VL_NULO = {0, "", "", "", 0};
+
+typedef struct nodo * ptr_nodo;
+struct nodo{
+    elemento elem;
+    ptr_nodo prox;
+};
+
+typedef struct{
+    ptr_nodo lista;
+    int tamanho;
+}list_encad;
+typedef list_encad tipo_lista;
+
+
+//FUNÇÕES IMPLEMENTADAS
+
+void entrar_cod_term(int *cod_term){
+    printf("Insira o codigo do terminal"); fflush(stdin); scanf("%d",&cod_term);
+}
+
+void entrar_dat(char *data){
+    printf("FORMATO dia - mes - ano [00000000]\nInsira a data: "); fflush(stdin); scanf("%s",&data);
+}
+
+void entrar_hora(char *hora){
+    printf("FORMATO hora - minuto [0000]\nInsira a hora: "); fflush(stdin); scanf("%s",&hora);
+}
+
+void entrar_placa(char *placa){
+    printf("FORMATO letra - numero [XXX0000]\nInsira a placa: "); fflush(stdin); scanf("%s",&placa);
+}
+
+void entrar_cod_empr(int *cod_empre){
+    printf("Insira o codigo da empresa: "); fflush(stdin); scanf("%d",&cod_empre);
+}
+
+int tamanho(list_encad le) {
+	return le.tamanho;
+}
+
+int obter_elemento(list_encad le, int i, elemento *e) {
+	int j; ptr_nodo pnodo;
+	if ((i <= le.tamanho) && (i > 0)) {
+		pnodo = le.lista;
+		for(j=2;j<=i;j++)
+			pnodo = pnodo->prox;
+		*e = pnodo->elem;
+      	return 1;
+	}
+	else {
+		*e = VL_NULO;
+      return 0;
+	}
+}
+
+void inicializa_lista(list_encad *le) {
+	le->tamanho = 0;
+	le->lista = NULL;
+}
+
+int incluir_lista(list_encad *le, int i, elemento e) {
+    int j; ptr_nodo pnodo_incluido, pnodo_anterior;
+
+  	if ((i <= le->tamanho+1) && (i > 0)) {
+        pnodo_incluido = (ptr_nodo)malloc(sizeof(struct nodo));
+        if (pnodo_incluido == NULL){
+            return 0;
+        }else{
+            pnodo_incluido->elem = e;
+       		if (i == 1) {
+                pnodo_incluido->prox = le->lista;
+          		le->lista = pnodo_incluido;
+       		}else {
+          		pnodo_anterior = le->lista;
+               		for (j=2; j<i; j++)
+				pnodo_anterior = pnodo_anterior->prox;
+          		pnodo_incluido->prox = pnodo_anterior->prox;
+          		pnodo_anterior->prox = pnodo_incluido;
+				}
+       		le->tamanho = le->tamanho + 1;
+       		return 1;
+    	}
+   }else
+    	return 0;
+}
+
+void inclur(){
+    elemento elem;
+
+    entrar_cod_term(&elem.cod_term);
+    entrar_dat(&elem.data[9]);
+    entrar_hora(&elem.hora[5]);
+    entrar_placa(&elem.placa[8]);
+    entrar_cod_empr(&elem.cod_empr);
+
+    file = fopen("2019-09-06.txt","a+");
+        fprintf("%d %s %s %s %d\n",elem.cod_term, elem.data[9],elem.hora[5],elem.placa[8],elem.cod_empr);
+    fclose(file);
+}
